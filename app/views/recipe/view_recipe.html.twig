@@ -1,0 +1,334 @@
+{% extends "generalTemplate.html.twig" %}
+{% block description %}
+    Cooking World, Browsing a recipe.
+{% endblock %}
+{% block title %}
+    {{ recipe['recipe_name'] }}
+{% endblock %}
+{% block body %}
+    <div class="row">
+        <div class="col-sm-offset-1 col-sm-7 content-left single-post">
+            <div class="blog-posts">
+                <ol class="view-recipe breadcrumb">
+                    <li><a href="home">Homepage</a></li>
+                    <li><a href="#">{{ recipe.recipe_name }}</a></li>
+                </ol>
+                <div class="row">
+                    <div class="col-sm-6"></div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-8">
+                        <img class="img-rounded" src="{{ recipe['recipe_photo'] }}"/>
+                    </div>
+                    <div class="col-sm-4">
+                        <table class="table table-bordered table-responsive">
+                            <tr>
+                                <td>
+                                    <p><strong class="text-capitalize view-recipe">level:&nbsp;</strong>
+                                        {{ recipe.level }}</p>
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td>
+                                    <p><strong class="text-capitalize view-recipe">Cook time:&nbsp;</strong>
+                                        {{ recipe.cooking_time }}&nbsp;minutes</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <p><strong class="text-capitalize view-recipe">Course:&nbsp;</strong>
+                                        {{ recipe.course }}</p>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <h3 class="post text-center" id="title">{{ recipe['recipe_name'] }}</h3>
+                <div class="article-time">
+                    {#<h4>{{ recipe.read_count }}&nbsp;Views&nbsp;&nbsp;#}
+                        {#{{ recipe.like_count }}&nbsp;Likes</h4>#}
+                    <h4>10&nbsp;Views&nbsp;&nbsp;
+                        11&nbsp;Likes</h4>
+                </div>
+                <table class="table table-bordered table-responsive">
+                    <tr>
+                        <td colspan="2">
+                            <img class="md-avatar img-circle" src="{{ recipe.userphoto }}"/>
+                            <a href="#">{{ recipe.username }}</a>
+                            <p class="text-right">{{ recipe.create_time }}</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <h4 style="color: #1b6d85">Introduction:</h4>
+                            <p>{{ recipe.description }}</p>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td colspan="2">
+                            <h4><strong class="text-capitalize view-recipe">ingredients</strong></h4>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <div class="row">
+                                {% for ingredient in ingredients %}
+                                    <div class="col-sm-6">
+                                        <div class="row">
+                                            <div class="col-sm-6 text-left">
+                                                <i class="ingredient-amount">{{ ingredient.quantity }}</i>
+                                            </div>
+                                            <div class="col-sm-6 text-right">
+                                                <p class="">{{ ingredient.name }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+
+                        </td>
+                    </tr>
+                </table>
+                <div class="recipe-steps">
+                    <h3 class="text-capitalize">Directions</h3>
+                    {% for step in steps %}
+                        <div class="recipe-step row">
+                            <div class="col-sm-4">
+                                <img src="{{ step.image }}" class="img-rounded">
+                            </div>
+                            <div class="col-sm-8">
+                                <div class="recipe-step-num">
+                                    <i class="num">{{ step.step_num }}.</i>
+                                </div>
+                                <div class="recipe-step-text">
+                                    <p>{{ step.content }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <br>
+            <div class="likes-block text-center">
+                <h1>Like it?</h1>
+                <span class="likes-btn fa fa-thumbs-o-up"></span>
+                <h3>AND</h3>
+            </div>
+            <div class="post-bottom">
+                {#<form action="https://www.sandbox.paypal.com/cgi-bin/webscr" method="post">#}
+                {#<input type="hidden" name="cmd" value="_s-xclick">#}
+                {#<input type="hidden" name="hosted_button_id" value="6RNT8A4HBBJRE">#}
+                {#<input type="image"#}
+                {#src="{{ rootpath }}public/asset/images/button_donate.png" alt="Buy Now">#}
+                {#<img alt="" src="https://paypalobjects.com/en_US/i/scr/pixel.gif"#}
+                {#width="1" height="1">#}
+                {#</form>#}
+                <form action="https://www.sandbox.paypal.com/cgi-bin/webscr" method="post" target="_top">
+                    <input type="hidden" name="cmd" value="_s-xclick">
+                    <input type="hidden" name="hosted_button_id" value="ZWKLG8XPENNCJ">
+                    <input type="image" src="{{ rootpath }}public/asset/images/button_donate.png" border="0" name="submit" alt="PayPal – The safer, easier way to pay online!">
+                    <img alt="" border="0" src="https://www.sandbox.paypal.com/en_AU/i/scr/pixel.gif" width="1" height="1">
+                </form>
+                <script>
+                    $('.post-bottom input[type="image"]').click(function () {
+                        //
+                    });
+                </script>
+            </div>
+
+            {#PayPal button#}
+            <hr>
+            <!--//related-posts-->
+            <div class="response">
+                <h4>Recipe Comments</h4>
+                {% for comment in comments %}
+                    <div class="media response-info">
+                        <div class="media-left response-text-left">
+                            <a href="#">
+                                <img class="media-object" src="{{ comment['userphoto'] }}"/>
+                            </a>
+                            <h5><a href="#">{{ comment['username'] }}</a></h5>
+                        </div>
+                        <div class="media-body response-text-right">
+                            {{ comment['content'] }}
+                            <ul>
+                                <li>{{ comment['create_time'] }}</li>
+                                {#<li><a href="#">Comment</a></li>#}
+                            </ul>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="comment-form">
+                <h4>My Comment</h4>
+                <form action="{{rootpath}}recipe/comment" method="post">
+                    <textarea name="content" placeholder="Write your comment here..."></textarea>
+                    <input type="hidden" value="{{ recipe['recipe_id'] }}" name="recipeid">
+                    <input type="submit" value="Comment" class="btn btn-danger">
+                </form>
+            </div>
+        </div>
+        <div class="col-sm-3 side-bar">
+            <div class="first_half">
+                <div class="list_vertical">
+                    <section class="accordation_menu">
+                        <div>
+                            <input id="label-1" name="lida" type="radio" checked/>
+                            <label for="label-1" id="item1"><i class="ferme"> </i>Most Popular<i class="icon-plus-sign i-right1"></i><i class="icon-minus-sign i-right2"></i></label>
+                            <div class="content" id="a1">
+                                <div class="scrollbar style-2">
+                                    <div class="force-overflow">
+                                        <div class="popular-post-grids">
+                                            {% for popular_recipe in popular_recipes %}
+                                                <div class="popular-post-grid">
+                                                    <div class="post-img">
+                                                        <a href="{{ rootpath }}recipe&id={{ popular_recipe.recipe_id }}"><img src="{{ popular_recipe.recipe_photo }}"/></a>
+                                                    </div>
+                                                    <div class="post-text">
+                                                        <a class="{{ rootpath }}recipe&id={{ popular_recipe.recipe_id }}">{{ popular_recipe.recipe_name }}</a>
+                                                        <p>{{ popular_recipe.create_time }}<br> <a class="span_link" href="{{ rootpath }}recipe&id={{ popular_recipe.recipe_id }}"><span class="glyphicon glyphicon-comment"></span>&nbsp;{{ popular_recipe.comment_count }}</a><a class="span_link" href="{{ rootpath }}recipe&id={{ popular_recipe.recipe_id }}">&nbsp;&nbsp;<span class="glyphicon glyphicon-eye-open"></span>&nbsp;{{ popular_recipe.read_count }}</a></p>
+                                                    </div>
+                                                    <div class="clearfix"></div>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <input id="label-2" name="lida" type="radio"/>
+                            <label for="label-2" id="item2"><i class="icon-leaf" id="i2"></i>Most Recent<i class="icon-plus-sign i-right1"></i><i class="icon-minus-sign i-right2"></i></label>
+                            <div class="content" id="a2">
+                                <div class="scrollbar" id="style-2">
+                                    <div class="force-overflow">
+                                        <div class="popular-post-grids">
+                                            {% for recent_recipe in recent_recipes %}
+                                                <div class="popular-post-grid">
+                                                    <div class="post-img">
+                                                        <a href="{{ rootpath }}recipe&id={{ recent_recipe.recipe_id }}"><img src="{{ recent_recipe.recipe_photo }}"/></a>
+                                                    </div>
+                                                    <div class="post-text">
+                                                        <a class="pp-title" href="{{ rootpath }}recipe&id={{ recent_recipe.recipe_id }}">{{ recent_recipe.recipe_name }}</a>
+                                                        <p>{{ recent_recipe.create_time }} <a class="span_link" href="{{ rootpath }}recipe&id={{ recent_recipe.recipe_id }}"><span class="glyphicon glyphicon-comment"></span>&nbsp;{{ recent_recipe.comment_count }}</a><a class="span_link" href="{{ rootpath }}recipe&id={{ recent_recipe.recipe_id }}">&nbsp;&nbsp;<span class="glyphicon glyphicon-eye-open"></span>&nbsp;{{ recent_recipe.read_count }}</a></p>
+                                                    </div>
+                                                    <div class="clearfix"></div>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <input id="label-3" name="lida" type="radio"/>
+                            <label for="label-3" id="item3"><i class="icon-trophy" id="i3"></i>User Comment<i class="icon-plus-sign i-right1"></i><i class="icon-minus-sign i-right2"></i></label>
+                            <div class="content" id="a3">
+                                <div class="scrollbar style-2">
+                                    <div class="force-overflow">
+                                        <div class="response">
+                                            {% for recent_comment in recent_comments %}
+                                                <div class="media response-info">
+                                                    <div class="media-left response-text-left">
+                                                        <a href="{{ rootpath }}recipe&id={{ recent_comment.recipe_id }}">
+                                                            <img class="media-object" src="{{ recent_comment.userphoto }}"/>
+                                                        </a>
+                                                        <h5><a href="#">{{ recent_comment.username }}</a></h5>
+                                                    </div>
+                                                    <div class="media-body response-text-right">
+                                                        {{ recent_comment.content }}
+                                                        <ul>
+                                                            <li>{{ recent_comment.create_time }}</li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="clearfix"> </div>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+            <div class="secound_half">
+                <div class="popular-news">
+                    <header>
+                        <h1 class="title-popular">Similar Recipes</h1>
+                    </header>
+                    <div class="side-bar-articles">
+                        {% for similar_recipe in similar_recipes %}
+                            <div class="side-bar-article">
+                                <a href="{{ rootpath }}recipe&id={{ similar_recipe.recipe_id }}"><img src="{{ similar_recipe.recipe_photo }}"/></a>
+                                <div class="side-bar-article-title">
+                                    <a href="{{ rootpath }}recipe&id={{ similar_recipe.recipe_id }}">{{ similar_recipe.recipe_name }}</a>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block scripts %}
+    <script>
+        $(function(){
+            $('.last-article p').addClass('artext');
+            $('.comment-form form').on('submit', function (e) {
+                e.preventDefault();
+                var form = $(this),
+                    content = form.find('textarea[name="content"]').val();
+                    recipeid = form.find('input[name="recipeid"]').val();
+                $.ajax({
+                    url: '{{ rootpath }}recipe/comment' ,
+                    method: 'POST',
+                    data:{
+                        content: content ,
+                        recipeid: recipeid
+                    } ,
+                    success: function (json) {
+                        var result = JSON.parse(json);
+                        if(result.status==200){
+                            location.reload();
+                        }else{
+                            alert(result.msg);
+                        }
+                    }
+                });
+            });
+            $('.collect-btn').click(function () {
+                var userid = $('#myuser').val();
+                var passageid = $('#passage-passageid').val();
+                $.ajax({
+                    url: 'addCollection.html' ,
+                    data: {
+                        userid: userid ,
+                        passageid: passageid
+                    } ,
+                    success: function (result) {
+                        if(result=='success')
+                            location.reload();
+                        else{
+                            alert('Fail to add to your favorites, please try again.');
+                        }
+                    } ,
+                    error: function () {
+                        alert('Network connection error');
+                    }
+                });
+            });
+            $('.likes-btn').click(function () {
+                if($(this).hasClass('fa-thumbs-o-up')){
+                    $(this).removeClass('fa-thumbs-o-up').addClass('fa-thumbs-up');
+                }else{
+                    $(this).removeClass('fa-thumbs-up').addClass('fa-thumbs-o-up');
+                }
+            });
+        });
+    </script>
+{% endblock %}

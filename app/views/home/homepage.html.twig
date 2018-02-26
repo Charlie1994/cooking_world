@@ -1,0 +1,238 @@
+{% extends "generalTemplate.html.twig" %}
+{% block description %}
+    Cooking World, Searching, sharing recipes with your friends.
+{% endblock %}
+{% block cssfiles %}
+    <link href="https://fonts.googleapis.com/css?family=Playfair+Display:400,400i,700,700i,900,900i" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Merriweather:300,400,400i,700,700i" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,600,700,700i,800" rel="stylesheet">
+{% endblock %}
+{% block jsfiles %}
+
+{% endblock %}
+{% block title %}
+    Cooking World
+{% endblock %}
+{% block extra_body %}
+<!-- carousel starts -->
+<div id="homeCarousel" class="carousel slide" data-ride="carousel">
+    <!-- Indicators -->
+    <ol class="carousel-indicators">
+        <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+        <li data-target="#myCarousel" data-slide-to="1"></li>
+        <li data-target="#myCarousel" data-slide-to="2"></li>
+        <li data-target="#myCarousel" data-slide-to="3"></li>
+        <li data-target="#myCarousel" data-slide-to="4"></li>
+    </ol>
+    <!-- Wrapper for slides -->
+    <div class="carousel-inner" role="listbox">
+        {% for carousel_card in carousel_cards %}
+        <div class="item">
+            {#TODO change to another domain#}
+            <div class="background" style="background-image: url('{{ carousel_card.recipe_photo }}')">
+                <div class="caption">
+                    <a href="{{ rootpath }}recipe&id={{ carousel_card.recipe_id }}">
+                        <h1>{{ carousel_card.recipe_name }}</h1>
+                        <p>{{ carousel_card.username }}</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Left and right controls -->
+    <a class="left carousel-control" href="#homeCarousel" data-slide="prev">
+        <span class="glyphicon glyphicon-chevron-left"></span>
+        <span class="sr-only">Previous</span>
+    </a>
+    <a class="right carousel-control" href="#homeCarousel" data-slide="next">
+        <span class="glyphicon glyphicon-chevron-right"></span>
+        <span class="sr-only">Next</span>
+    </a>
+</div>
+<!-- carousel ends -->
+{% endblock %}
+{% block body %}
+{#<div class="hr">#}
+    {#<hr style="width: 100px">#}
+    {#<i class="fas fa-circle"></i>#}
+    {#<hr style="width: 100px">#}
+{#</div>#}
+{#<div class="">#}
+    {#<div class="header">#}
+        {#<h1 class="title-head text-center">A Website for Sharing Recipes</h1>#}
+    {#</div>#}
+    {#<div class="row">#}
+        {#<div class="col-sm-5 col-sm-offset-1">#}
+            {#description#}
+        {#</div>#}
+        {#<div class="col-sm-5">#}
+            {#img#}
+        {#</div>#}
+    {#</div>#}
+
+{#</div>#}
+<div class="recipe-cards">
+    <div class="header">
+        <h1 class="title-head text-center">Most Popular</h1>
+    </div>
+    {% for popular_recipe in popular_recipes %}
+    {% if loop.index == 1 or loop.index == 5 %}
+        <div class="row">
+    {% endif %}
+        <div class="col-sm-12 col-md-3 recipe-card">
+            <a href="{{ rootpath }}recipe&id={{ popular_recipe.recipe_id }}"><img src="{{ popular_recipe.recipe_photo }}" class="img-responsive img-rounded"/></a>
+                <a href="{{ rootpath }}recipe&id={{ popular_recipe.recipe_id }}"><p class="text-left text-capitalize">{{ popular_recipe.recipe_name }}</p></a>
+                by&nbsp;<a href="#" class="UserName">{{ popular_recipe.username }}</a>
+                <div class="introduction">{{ popular_recipe.description }}</div>
+        </div>
+    {% if loop.index == 4 or loop.index == 8 %}
+        </div>
+    {% endif %}
+    {% endfor %}
+
+</div>
+<div class="recipe-cards">
+    <div class="header">
+        <h1 class="title-head text-center">Most Recent</h1>
+    </div>
+    {% for recent_recipe in recent_recipes %}
+    {% if loop.index == 1 or loop.index == 5 %}
+    <div class="row">
+    {% endif %}
+            <div class="col-xs-12 col-md-3 recipe-card">
+                <a href="{{ rootpath }}recipe&id={{ recent_recipe.recipe_id }}"><img src="{{ recent_recipe.recipe_photo }}" class="img-responsive img-rounded"/></a>
+                <a href="#"><strong class="text-left text-capitalize">{{ recent_recipe.recipe_name }}</strong></a>
+                by&nbsp;<a href="#" class="username">{{ recent_recipe.username }}</a>
+                <div class="introduction">{{ recent_recipe.description }}</div>
+            </div>
+    {% if loop.index == 4 or loop.index == 8 %}
+    </div>
+    {% endif %}
+    {% endfor %}
+</div>
+
+{#<div class="home-for-beginner">#}
+    {#<div class="header">#}
+        {#<h1 class="title-head text-center">For beginners</h1>#}
+    {#</div>#}
+    {#<div class="row">#}
+        {#<div class="col-xs-12 col-sm-6 left">#}
+            {#<img src="{{ starter_left_recipe.recipe_photo }}" class="img-responsive img-rounded">#}
+            {#<a href="{{ rootpath }}recipe&id={{ starter_left_recipe.recipe_id }}" class="recipe-name"><strong>{{ starter_left_recipe.recipe_name }}</strong></a>#}
+            {#by&nbsp;<a href="#" class="username">{{ starter_left_recipe.username }}</a>#}
+            {#<div class="introduction">{{ starter_left_recipe.description }}</div>#}
+        {#</div>#}
+        {#<div class="col-xs-12 col-sm-6 right">#}
+            {#{% for recipe in starter_right_recipes %}#}
+            {#<div class="col-xs-6 col-sm-6">#}
+                {#<div class="recipe-img">#}
+                    {#<img src="{{ recipe.recipe_photo }}" class="img-responsive img-rounded">#}
+                {#</div>#}
+                {#<a href="{{ rootpath }}recipe&id={{ recipe.recipe_id }}" class="recipe-name"><strong>{{ recipe.recipe_name }}</strong></a>#}
+                {#by&nbsp;<a href="#" class="username">{{ recipe.username }}</a>#}
+            {#</div>#}
+            {#{% endfor %}#}
+        {#</div>#}
+    {#</div>#}
+{#</div>#}
+{% endblock %}
+{% block bottom_body %}
+<div class="ctb-section">
+    <div class="home-contributors">
+        <div class="header">
+            {#<h3 class="title-head">Active Contributors</h3>#}
+            <h3 class="title-head">For Beginners</h3>
+        </div>
+    </div>
+    <!-- carousel starts -->
+    <div id="contributorCarousel" class="carousel slide" data-ride="carousel">
+        <!-- Wrapper for slides -->
+        {#<div class="carousel-inner" role="listbox">#}
+            {#{% for user in users %}#}
+            {#{% if loop.index == 1 or loop.index == 5 %}#}
+            {#<div class="item">#}
+            {#{% endif %}#}
+                {#<div class="text-center col-xs-4 col-sm-2">#}
+                    {#<a href="#"><img src="{{ user.photo }}" alt="{{ user.username }}" class="img-circle"></a>#}
+                    {#<a href="#">{{ user.username }}</a>#}
+                {#</div>#}
+            {#{% if loop.index == 4 or loop.index == 8 %}#}
+            {#</div>#}
+            {#{% endif %}#}
+            {#{% endfor %}#}
+        {#</div>#}
+        <div class="carousel-inner" role="listbox">
+            {% for recipe in starter_right_recipes %}
+                {% if loop.index == 1 or loop.index == 5 %}
+                    <div class="item">
+                {% endif %}
+                <div class="text-center col-xs-4 col-sm-2">
+                    <a href="#"><img src="{{ recipe.recipe_photo }}" alt="{{ user.username }}" class="img-circle"></a>
+                    <a href="#">{{ recipe.recipe_name }}</a>
+                </div>
+                {% if loop.index == 4 or loop.index == 8 %}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+        <!-- Left and right controls -->
+        <a class="left carousel-control" href="#contributorCarousel" data-slide="prev">
+            <span class="glyphicon glyphicon-arrow-left"></span>
+            <span class="sr-only">Previous</span>
+        </a>
+        <a class="right carousel-control" href="#contributorCarousel" data-slide="next">
+            <span class="glyphicon glyphicon-arrow-right"></span>
+            <span class="sr-only">Next</span>
+        </a>
+    </div>
+</div></div>
+{% endblock %}
+{% block scripts %}
+<script>
+    $(function () {
+        $('nav').css('margin-bottom',0);
+        $('.carousel-inner .item:first-child').addClass('active');
+        // change the height of carousel to make w/h = 3/1
+        // var cs_imgs = $('#homeCarousel .item img');
+        // var cs_img_width = $(cs_imgs[0]).width();
+        // for (i=0;i<cs_imgs.length;i++){
+        //     $(cs_imgs[i]).css({'height':cs_img_width/2.5+'px'});
+        //     if(cs_img_width>992){
+        //         $(cs_imgs[i]).parent('.item').children('.carousel-caption').css({'margin-bottom':cs_img_width/9+'px'});
+        //     }else{
+        //         $(cs_imgs[i]).parent('.item').children('.carousel-caption').css({'margin-bottom':0+'px'});
+        //     }
+        // }
+        // change the height/width of all images in the recipe cards to 3/4
+        var rc_imgs = $('.recipe-card img');
+        for(i=0;i<rc_imgs.length;i++){
+            $(rc_imgs[i]).css({'height':$(rc_imgs[i]).width()*0.75+'px'});
+        }
+        var begin_height;
+        $('.home-for-beginner .left img').each(function () {
+            begin_height = $(this).width()*0.75;
+            $(this).css("height", begin_height+'px');
+        });
+        var begin_right_imgs = $('.home-for-beginner .right img');
+        begin_right_imgs.each(function () {
+            $(this).css({'height':begin_height*0.35+'px'});
+        });
+
+        // change the layout of the contributors section according to the screen size
+        $('#contributorCarousel .item:first').addClass('active');
+        $('#contributorCarousel .item').each(function () {
+            $(this).find('div:first').addClass('col-sm-offset-2 col-xs-offset-2')
+        });
+        var cw = $('#contributorCarousel img').width();
+        $('#contributorCarousel img').css({'height':cw+10+'px'});
+        if( cw < 962*0.45/3 ) {
+            var elements = $('#contributorCarousel .item');
+            elements.each(function () {
+                $($(this).children()[2]).addClass('col-xs-offset-2')
+            });
+        }
+    });
+</script>
+{% endblock %}

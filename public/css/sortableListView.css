@@ -1,0 +1,70 @@
+.sortable-list{
+    position: relative;
+}
+.sortable-item {
+    /*overflow: hidden;*/
+    position: absolute;
+    top: 1em;
+    left: 1em;
+    width: 100%;
+}
+/*.sortable-item  [class*="col-"] {*/
+    /*margin-bottom: -99999px;*/
+    /*padding-bottom: 99999px;*/
+/*}*/
+.sortable-item .item-content {
+    padding: 0.5em 0.2em 0.5em 0.5em;
+    border-radius: 0.3em;
+}
+.sortable-btns {
+    position: relative;
+    padding: 0 0 0 0.3em;
+}
+.over .sortable-btns {
+    visibility: visible;
+}
+.not-over .sortable-btns {
+    visibility: hidden;
+}
+.sortable-btn {
+    position: absolute;
+    display: flex;
+    width: 2em;
+    height: 2em;
+    background-color: var(--carrot);
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+}
+
+.sortable-btn i,p,a{
+    color: white;
+}
+
+.sortable-btn.drag-btn i,p,a{
+    color: black;
+}
+
+.sortable-btn.drag-btn {
+    background: none;
+}
+
+.sortable-btn.delete-btn {
+    background: var(--clouds);
+    z-index: 10;
+}
+
+.sortable-btn.add-btn:hover {
+    background-color: var(--pomegranate);
+    cursor: pointer;
+}
+
+.sortable-btn.drag-btn:hover {
+    background-color: var(--clouds);
+    cursor: all-scroll;
+}
+
+.sortable-btn.delete-btn:hover {
+    background-color: var(--asbestos);
+    cursor: pointer;
+}

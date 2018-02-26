@@ -1,0 +1,80 @@
+.add-photo-box {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 0.3em;
+}
+.add-photo-box strong {
+    display: block;
+}
+.add-photo-box .display-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: none;
+}
+.add-photo-box .add-photo-btn {
+    display: none;
+}
+.add-photo-box .icon-camera {
+    max-width: 100%;
+    max-height: 80%;
+}
+.add-photo-box .change-photo-btn {
+    display: none;
+    text-align: center;
+    width: 1.8em;
+    height: 1.8em;
+    opacity: 0.5;
+    padding-bottom: 0.1em;
+    position: absolute;
+    right: 2em;
+    bottom: 0;
+    color: white;
+    background-color: black;
+    border-radius: 0.2em;
+}
+.add-photo-box .change-photo-btn:hover {
+    opacity: 0.93;
+    cursor: pointer;
+}
+.add-photo-box .delete-photo-btn {
+    display: none;
+    text-align: center;
+    width: 1.8em;
+    height: 1.8em;
+    opacity: 0.5;
+    padding-bottom: 0.1em;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    color: white;
+    background-color: black;
+    border-radius: 0.2em;
+}
+.add-photo-box .delete-photo-btn:hover {
+    opacity: 0.93;
+    cursor: pointer;
+}
+.add-photo-box.no-photo:hover{
+    background-color: var(--asbestos);
+}
+.add-photo-box.has-photo .icon-camera{
+    display: none;
+}
+.add-photo-box .display-img:hover{
+    cursor: pointer;
+}
+.add-photo-box.has-photo .display-img, .add-photo-box.has-photo .change-photo-btn, .add-photo-box.has-photo .delete-photo-btn {
+    display: block;
+}
+.add-photo-box.no-photo .display-img, .add-photo-box.no-photo .change-photo-btn, .add-photo-box.no-photo .delete-photo-btn{
+    display: none;
+}
+.add-photo-box.no-photo .icon-camera{
+    display: block;
+}
+.add-photo-box .add-photo-btn{
+    display: none;
+}

@@ -1,0 +1,62 @@
+{% extends "generalTemplate.html.twig" %}
+{% block description %}
+    Cooking World, Creating personal recipes.
+{% endblock %}
+{% block cssfiles %}
+
+{% endblock %}
+{% block jsfiles %}
+<script src="{{ rootpath }}public/js/jquery.dotdotdot.js"></script>
+{% endblock %}
+{% block title %}
+
+{% endblock %}
+{% block extra_body %}
+
+{% endblock %}
+{% block body %}
+<div class="search-recipes col-sm-8">
+    {% for recipe in recipes %}
+        <hr>
+        <div class="recipe-item row">
+            <div class="recipe-item-left col-sm-4">
+                <div class="img-box">
+                    <div class="img-padding"></div>
+                    <div class="img-container">
+                        <a href="{{ rootpath }}recipe&id={{ recipe.recipe_id }}"><img src="{{ recipe.recipe_photo }}" class="img-rounded"></a>
+                    </div>
+                </div>
+            </div>
+            <div class="recipe-item-right col-sm-8">
+                <div class="right-padding"></div>
+                <div class="content">
+                    <div class="recipe-item-title">
+                        <a href="{{ rootpath }}recipe&id={{ recipe.recipe_id }}" class="search-recipe-item">
+                            <strong class="title" href="{{ rootpath }}recipe&id={{ recipe.recipe_id }}">{{ recipe.recipe_name }}</strong></a>
+                        <div class="recipe-item-description">
+                            <p>{{ recipe.description }}</p>
+                        </div>
+                        <p class="recipe-item-username">By <a href="#">{{ recipe.username }}</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}
+{% block bottom_body %}
+
+{% endblock %}
+{% block scripts %}
+<script>
+    $(function () {
+        $('.recipe-item-description p').dotdotdot();
+        $('.recipe-item').each(function () {
+            var item = $(this),
+                left = item.find('.recipe-item-left'),
+                right = item.find('.recipe-item-right');
+            right.css("height", left.height()+'px');
+        });
+    });
+</script>
+{% endblock %}

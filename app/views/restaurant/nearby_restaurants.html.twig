@@ -1,0 +1,265 @@
+{% extends "generalTemplate.html.twig" %}
+{% block description %}
+    Cooking World, find nearby restaurants.
+{% endblock %}
+{% block cssfiles %}
+
+{% endblock %}
+{% block jsfiles %}
+
+{% endblock %}
+{% block title %}
+Nearby Restaurants
+{% endblock %}
+{% block extra_body %}
+    <div class="nearby-restaurant-container">
+        <div id="nearby-restaurant-map">
+        </div>
+        <div class="restaurant-list">
+            <div class="search-bar">
+                <div class="input">
+                    <input id="re-custom-search-input" type="text" class="search-query form-control" placeholder="Search Restaurants"/>
+                </div>
+
+                <div class="input-group">
+                    <div class="col-sm-3" style="padding-left: 5px;padding-right: 5px">
+                        <select class="form-control">
+                            <option value="all">All</option>
+                            <option value="restaurant">Restaurant</option>
+                            <option value="cafe">Cafe</option>
+                            <option value="fast_food">Fast food</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-5" style="padding-left: 5px;padding-right: 5px">
+                        <select class="form-control filter">
+                            <option selected disabled>Sort by</option>
+                            <option value="distance">Sort by distance</option>
+                            <option value="rating">Sort by rating</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-4" style="padding-left: 5px;padding-right: 5px">
+                        <select class="form-control filter">
+                            <option value="distance"><1km</option>
+                            <option value="distance"><3km</option>
+                            <option value="rating"><5km</option>
+                        </select>
+                    </div>
+                    <hr>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block body %}
+{% endblock %}
+{% block bottom_body %}
+
+{% endblock %}
+{% block scripts %}
+    <script>
+        'use strict';
+        String.prototype.format = function() {
+            var a = this;
+            for (var k in arguments) {
+                if(arguments.hasOwnProperty(k))
+                    a = a.replace("{" + k + "}", arguments[k])
+            }
+            return a
+        };
+        function round(value, precision) {
+            var multiplier = Math.pow(10, precision || 0);
+            return Math.round(value * multiplier) / multiplier;
+        }
+        var contentString = '<div id="iw-container">' +
+            '<div class="iw-title"><p>{0}<span style="color: firebrick; font-size: small">&nbsp;&nbsp;&nbsp;&nbsp;{1}</span></p></div>' +
+            '<div class="iw-content">' +
+            '<img src="{8}">' +
+            '<p>{2}</p>' +
+            '<div class="iw-subTitle">Address:</div>' +
+            '<p class="address">{3}</p><p class="address">{4}</p>'+
+            '<div class="iw-subTitle">Average Price:</div>' +
+            '<p>{5}</p>'+
+            '<br>Phone. {6}<br>Find more in TripAdvisor: <a href="https://www.tripadvisor.com.au{7}" target="_blank">Have a look</a> </p>'+
+            '</div>' +
+            '<div class="iw-bottom-gradient"></div>' +
+            '</div>';
+        var map, infoWindow, userpos, distance, restaurants, markers, infowindows,
+            $restaurant_list = $('.restaurant-list');
+        var restaurant_icon = "{{ rootpath }}public/images/layout/restaurant.png";
+        var cafe_icon = "{{ rootpath }}public/images/layout/cafe.png";
+        var fastfood_icon = "{{ rootpath }}public/images/layout/fastfood.png";
+        markers = {};
+        infowindows = {};
+        function initMap() {
+            var brisbane = {lat: -27.4954, lng: 153.0120};
+            map = new google.maps.Map(document.getElementById('nearby-restaurant-map'), {
+                zoom: 16,
+                center: brisbane,
+                mapTypeControl: true,
+                mapTypeControlOptions: {
+                    style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
+                    position: google.maps.ControlPosition.TOP_CENTER
+                },
+                zoomControl: true,
+                zoomControlOptions: {
+                    position: google.maps.ControlPosition.RIGHT_CENTER
+                },
+                scaleControl: true,
+                streetViewControl: true,
+                streetViewControlOptions: {
+                    position: google.maps.ControlPosition.RIGHT_BOTTOM
+                },
+                fullscreenControl: true
+            });
+            var marker = new google.maps.Marker({
+                position: brisbane,
+                map: map
+            });
+
+            infoWindow = new google.maps.InfoWindow({
+                content: contentString,
+                height: 1000,
+                width: 800});
+
+            // Try HTML5 geolocation.
+            // if (navigator.geolocation) {
+            //     navigator.geolocation.getCurrentPosition(function(position) {
+            //         userpos = {
+            //             lat: position.coords.latitude,
+            //             lng: position.coords.longitude
+            //         };
+            //         //TODO should be removed
+            //         userpos = brisbane;
+            //         getNearbyPlaces(userpos, 1, 1);
+            //         // infoWindow.setPosition(userpos);
+            //         // infoWindow.setContent('Location found.');
+            //         // infoWindow.open(map);
+            //         // map.setCenter(uluru);
+            //     });
+            // } else {
+            //     // Browser doesn't support Geolocation
+            //     handleLocationError(false, infoWindow, map.getCenter);
+            // }
+            userpos = brisbane;
+            getNearbyPlaces(userpos, 1, 1);
+        }
+        function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+            infoWindow.setPosition(pos);
+            infoWindow.setContent(browserHasGeolocation ?
+                'Error: The Geolocation service failed.' :
+                'Error: Your browser doesn\'t support geolocation.');
+            infoWindow.open(map);
+        }
+        function getNearbyPlaces(userpos, search_distance, pagenum) {
+            $.ajax({
+                url: "{{ rootpath }}restaurant/nearby",
+                method: 'GET',
+                data:{
+                    userpos: userpos,
+                    pagenum: pagenum,
+                    distance: search_distance
+                },
+                success: function (r) {
+                    var restaurants = JSON.parse(r);
+                    Object.keys(restaurants).forEach(function(key) {
+                        var restaurant_info = restaurants[key],
+                            longitude = parseFloat(restaurant_info.longitude),
+                            latitude = parseFloat(restaurant_info.latitude),
+                            item = generateItem(restaurant_info);
+                        $restaurant_list.append(item);
+                        var icon = restaurant_icon;
+                        switch (restaurant_info.category) {
+                            case "Restaurant":
+                                icon = restaurant_icon;
+                                break;
+                            case "Cafe":
+                                icon = cafe_icon;
+                                break;
+                            case "Fast food":
+                                icon = fastfood_icon;
+                                break;
+                        }
+                        markers[key] = new google.maps.Marker({
+                            position: {
+                                lat: latitude,
+                                lng: longitude
+                            },
+                            icon: icon,
+                            map: map
+                        });
+                        infoWindow = new google.maps.InfoWindow({content: contentString.format(restaurant_info.restaurant_name, restaurant_info.category, restaurant_info.description, restaurant_info.address, restaurant_info.extend_address, restaurant_info.average_price, restaurant_info.phone, restaurant_info.restaurant_url, '{{ rootpath }}public/images/content/restaurants/'+restaurant_info.restaurant_id+'.jpg')});
+                        infowindows[key] = infoWindow;
+                        markers[key].addListener('click', function () {
+                            infoWindow.open(map, markers[key]);
+                        });
+                    });
+                    updateClickListener();
+                    console.log(infowindows);
+                },
+                error: function() {
+                    alert('Fail to connect to the server, please check your Internet setting.');
+                }
+            });
+        }
+        var rad = function(x) {
+            return x * Math.PI / 180;
+        };
+
+        var getDistance = function(p1, p2) {
+            var R = 6378137; // Earth’s mean radius in meter
+            var dLat = rad(p2.lat - p1.lat);
+            var dLong = rad(p2.lng - p1.lng);
+            var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(rad(p1.lat)) * Math.cos(rad(p2.lat)) *
+                Math.sin(dLong / 2) * Math.sin(dLong / 2);
+            var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            return R * c;// returns the distance in meter
+        };
+        function generateItem(restaurant) {
+            // 0:id, 1:name, 2:rating, 3:distance, 4:unit
+            var $item = "<div data-id=\"{0}\" class=\"restaurant-item row\">" +
+                "                <div class=\"restaurant-image col-sm-4\">" +
+                "                    <img src='{5}' />" +
+                "                </div>" +
+                "                <div class=\"col-sm-8 content\">" +
+                "                    <strong class=\"restaurant-name\">{1}</strong>" +
+                "                    <p>Rating:&nbsp;<span class=\"rating\">{2}</span></p>" +
+                "                    <p>Distance:&nbsp;<span class=\"distance\"> {3} <i class=\"unit\">{4}</i></span></p>" +
+                "                </div>" +
+                "            </div>";
+            var d = getDistance(userpos, {
+                lat: parseFloat(restaurant.latitude),
+                lng: parseFloat(restaurant.longitude)
+            }), distance, unit;
+            if (d >= 1000) {
+                distance = round(d/1000, 3);
+                unit = "km";
+            } else {
+                distance = round(d, 0);
+                unit = "m";
+            }
+            return $item.format(restaurant.restaurant_id, restaurant.restaurant_name, restaurant.rating, distance, unit, '{{ rootpath }}public/images/content/restaurants/'+restaurant.restaurant_id+'.jpg');
+        }
+        function updateClickListener() {
+            $('.restaurant-item').click(function () {
+                var $item = $(this),
+                    id = Number($item.data("id"));
+                console.log(markers[id]);
+                map.panTo(markers[id].getPosition());
+                for(var key in infowindows){
+                    if(isInfoWindowOpen(infowindows[key]))
+                        infowindows[key].close();
+                }
+                infowindows[id].open(map, markers[id]);
+            });
+        }
+        function isInfoWindowOpen(infoWindow){
+            var map = infoWindow.getMap();
+            return (map !== null && typeof map !== "undefined");
+        }
+
+    </script>
+    <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDJHKPqWRqCxvivNzlqQYJEsoP9ixK85Tk&callback=initMap">
+    </script>
+{% endblock %}

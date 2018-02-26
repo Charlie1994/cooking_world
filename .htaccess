@@ -1,0 +1,23 @@
+<IfModule mod_rewrite.c>
+    # Remove the question mark from the request but maintain the query string
+    RewriteEngine On
+
+    # Uncomment the following line if your public folder isn't the web server's root
+    # RewriteBase /
+
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-l
+    RewriteRule ^(.*)$ public/index.php?$1 [L,QSA]
+</IfModule>
+
+#<IfModule mod_rewrite.c>
+#    RewriteEngine On
+#
+#    # 确保请求路径不是一个文件名或目录
+#    RewriteCond %{REQUEST_FILENAME} !-f
+#    RewriteCond %{REQUEST_FILENAME} !-d
+#
+#    # 重定向所有请求到 index.php?url=PATHNAME
+#    RewriteRule ^(.*)$ index.php?url=$1 [PT,L]
+#</IfModule>

@@ -1,0 +1,26 @@
+<div class="modal fade" id="upload-image-modal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h5 class="modal-title" id="imageModalLabel">Add a photo</h5>
+            </div>
+            <div class="modal-body">
+                <div class="drag-drop-box no-photo">
+                    <div class="drag-block"></div>
+                    <img class="icon-camera img-responsive" src="{{ resourcepath }}/images/ic_camera_240px.png">
+                    <img class="display-img img-responsive" src="">
+                    <strong class="drag-label">Drag here</strong>
+                    <input type="file" class="file-box">
+                    <div class="float-bar">
+                        <strong>Choose a photo</strong>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary confirm-btn">OK</button>
+            </div>
+        </div>
+    </div>
+</div>

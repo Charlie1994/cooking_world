@@ -1,0 +1,75 @@
+.drag-drop-box{
+    width: 100%;
+    border: var(--clouds) solid 2px;
+    border-radius: 0.5em;
+    -moz-border-radius: 0.5em;
+    -webkit-border-radius: 0.5em;
+    margin: 0 auto 1.5em;
+    overflow: hidden;
+    position: relative;
+}
+
+.drag-block {
+    width: 100%;
+    padding-bottom: 75%;
+    height: 0;
+    background-color: black;
+    position: relative;
+    opacity: 0.5;
+    visibility: hidden;
+    z-index: 3;
+}
+
+.drag-drop-box .icon-camera, .drag-drop-box .drag-label {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    left: 50%;
+}
+
+.display-img {
+    width: 100%;
+}
+
+.icon-camera {
+    width: 30%;
+}
+
+.has-photo .icon-camera, .no-photo .display-img, .has-photo .drag-block, .has-photo .drag-label{
+    display: none;
+}
+
+.has-photo .display-img, .no-photo .icon-camera{
+    display: block;
+}
+
+.float-bar {
+    width: 100%;
+    height: 3.5em;
+    -moz-opacity: 0.75;
+    opacity: 0.75;
+    background-color: #000000;
+    position: absolute;
+    bottom: -3.5em;
+    display:flex;
+    display: -webkit-flex;
+    align-items:center;
+    justify-content: center;
+    color: var(--lightgray);
+    z-index: 4;
+}
+
+.float-bar:hover{
+    cursor: pointer;
+    color: var(--alizarin);
+}
+
+.drag-drop-box input[type="file"] {
+    display: none;
+}
+
+.drag-label {
+    color: white;
+    display: none;
+    z-index: 5;
+}

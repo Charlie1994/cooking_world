@@ -1,0 +1,167 @@
+{% extends "generalTemplate.html.twig" %}
+{% block description %}
+Cooking World, Creating personal recipes.
+{% endblock %}
+{% block cssfiles %}
+
+{% endblock %}
+{% block jsfiles %}
+
+{% endblock %}
+{% block title %}
+
+{% endblock %}
+{% block extra_body %}
+
+{% endblock %}
+{% block body %}
+    <ol class="breadcrumb">
+        <li><a href="{{ rootpath }}home">Homepage</a></li>
+        <li><a href="#">{{ keyword }}</a></li>
+    </ol>
+    <div class="row">
+        <div class="col-sm-8 col-sm-offset-2">
+            <div class="row col-sm-10 col-sm-offset-1">
+                <input id="custom-search-input" type="text" class="search-query form-control" placeholder="Search Recipe" value="{{ keyword }}" />
+            </div>
+            <div class="blog-posts">
+                <div class="search-block finish">
+                    <div class="search-loader">Loading...</div>
+                </div>
+                <div class="search-recipes finish">
+                    {% for recipe in recipes %}
+                        <div class="recipe-item row">
+                            <hr>
+                            <div class="recipe-item-left col-sm-4">
+                                <div class="img-box">
+                                    <div class="img-padding"></div>
+                                    <div class="img-container">
+                                        <a href="{{ rootpath }}recipe&id={{ recipe.recipe_id }}"><img src="{{ recipe.recipe_photo }}" class="img-rounded"></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="recipe-item-right col-sm-8">
+                                <div class="right-padding"></div>
+                                <div class="content">
+                                    <div class="recipe-item-title">
+                                        <a href="{{ rootpath }}recipe&id={{ recipe.recipe_id }}" class="search-recipe-item">
+                                            <strong class="title" href="{{ rootpath }}recipe&id={{ recipe.recipe_id }}">{{ recipe.recipe_name }}</strong></a>
+                                        <div class="recipe-item-description">
+                                            <p>{{ recipe.description }}</p>
+                                        </div>
+                                        <p class="recipe-item-username">By <a href="#">{{ recipe.username }}</a></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {#TODO#}
+            {#<div class="search-pagination-block">#}
+            {#<div class="search-pagination">#}
+            {#<ul class="pagination">#}
+            {#<li><a href="#"><span class="glyphicon glyphicon-chevron-left"></span>&nbsp;Previous</a></li>#}
+            {#{% for i in 1..pagecount %}#}
+            {#<li><a href="#">{{ i }}</a></li>#}
+            {#{% endfor %}#}
+            {#<li><a href="#">Next&nbsp;<span class="glyphicon glyphicon-chevron-right"></span></a></li>#}
+
+            {#</ul>#}
+            {#</div>#}
+            {#</div>#}
+        </div>
+    </div>
+    <div class="single-page">
+        <div class="col-md-8 content-left single-post">
+
+        </div>
+    </div>
+
+{% endblock %}
+{% block bottom_body %}
+
+{% endblock %}
+{% block scripts %}
+<script>
+'use strict';
+$(function () {
+    var $searchbox = $('#custom-search-input'),
+        $recipe_item = $('.recipe-item:first').clone(),
+        $loading_block = $('.search-block'),
+        $recipe_list = $('.search-recipes'),
+        update_list = function (recipes) {
+            $recipe_list.empty();
+            var length = recipes.length;
+            for(var i=0; i<length; i++){
+                var recipe = recipes[i],
+                    $title = $recipe_item.find('.title'),
+                    $description = $recipe_item.find('.recipe-item-description p'),
+                    $username = $recipe_item.find('.recipe-item-username a'),
+                    $img = $recipe_item.find('img'),
+                    $link = $('.img-container a'),
+                    $newitem = $recipe_item.clone();
+                $title.text(recipe.recipe_name);
+                $description.text(recipe.description);
+                $username.text(recipe.username);
+                $img.attr('src', recipe.recipe_photo);
+                $link.attr('href', "{{ rootpath }}recipe&id="+recipe.recipe_id);
+                $recipe_list.append($recipe_item);
+                $recipe_item = $newitem;
+            }
+            refresh_view();
+        },
+        refresh_view = function () {
+            $('.recipe-item').each(function () {
+                var item = $(this),
+                    left = item.find('.recipe-item-left'),
+                    right = item.find('.recipe-item-right'),
+                    description = item.find('.recipe-item-description p');
+                right.css("height", left.height()+'px');
+                var str = description.text();
+                if(str.length > 150)
+                    str = str.substr(0, 150) + "...";
+                description.text(str);
+            });
+        },
+        search_recipes = function (keyword, pagenum) {
+            $.ajax({
+                url: '{{ rootpath }}recipe/search',
+                method: 'GET',
+                data:{
+                    keyword: keyword,
+                    pagenum: pagenum
+                },
+                beforeSend: function () {
+                    $loading_block.removeClass('finish').addClass('loading');
+                    $recipe_list.removeClass('finish').addClass('loading');
+                },
+                success: function (r) {
+                    var result = JSON.parse(r);
+                    console.log(result.recipes);
+                    update_list(result.recipes);
+                },
+                complete: function () {
+                    $loading_block.removeClass('loading').addClass('finish');
+                    $recipe_list.removeClass('loading').addClass('finish');
+                }
+            });
+        };
+    refresh_view();
+
+    // 2 second delay of input change
+    var qid;
+    $searchbox.on('change', function () {
+        if(qid !== null) clearTimeout(qid);
+        var query = $(this).val();
+        if(query === "") return;
+        console.log(query);
+        qid = setTimeout(function () {
+            search_recipes(query, 1)
+        }, 1000)
+    });
+
+
+});
+</script>
+{% endblock %}

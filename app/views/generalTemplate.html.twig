@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {% set rootpath = '/cooking_world/' %}
+    {% set resourcepath = '/cooking_world/public/asset/' %}
+    {% block head %}
+    <meta charset="UTF-8">
+    <meta name="description" content="{% block description %}{% endblock %}"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {# Loading general css files #}
+    <link rel="stylesheet" type="text/css" href="{{ resourcepath }}css/normalize.css">
+    <link rel="stylesheet" type="text/css" href="{{ rootpath }}public/css/myvariables.css">
+    <link rel="stylesheet" href="{{ resourcepath }}font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="{{ resourcepath }}flat-ui-dist/css/vendor/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="{{ resourcepath }}flat-ui-dist/css/my-flat-ui.css">
+    <link rel="stylesheet" type="text/css" href="{{ rootpath }}public/css/style.css">
+    {# Loading custom css files #}
+    {% block cssfiles %}{% endblock %}
+    {# Loading general js files #}
+    <script src="{{ resourcepath }}js/jquery-3.2.1.js"></script>
+    <script src="{{ resourcepath }}js/bootstrap.min.js"></script>
+    <script src="{{ resourcepath }}js/flat-ui.js"></script>
+    <script src="{{ rootpath }}public/js/navbar.js"></script>
+    {# Loading custom js files #}
+    {% block jsfiles %}{% endblock %}
+    <title>{% block title %}{% endblock %}</title>
+    {% endblock %}
+</head>
+{% include "components/navigationbar.html.twig" %}
+<body>
+    {% block extra_body %}{% endblock %}
+    <div class="container-fluid">
+        {% block body %}{% endblock %}
+    </div>
+    {% block bottom_body %}{% endblock %}
+    <br>
+</body>
+<script>
+    String.prototype.format = function() {
+        var a = this;
+        for (var k in arguments) {
+            if(arguments.hasOwnProperty(k))
+                a = a.replace("{" + k + "}", arguments[k])
+        }
+        return a
+    };
+</script>
+{% block scripts %}{% endblock %}
+{% include "components/footer.html.twig" %}
+</html>
